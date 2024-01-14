@@ -1,9 +1,9 @@
 import requests
 from bs4 import BeautifulSoup
 import json
-url = str("https://www.architonic.com/en")
+url = str("link")
 response = requests.get(url)
-navbarClass = str("mobile-menu-item")
+navbarClass = str("class")
 
 if response.status_code == 200:
     soup = BeautifulSoup(response.text, 'html.parser')

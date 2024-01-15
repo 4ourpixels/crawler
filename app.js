@@ -31,7 +31,7 @@ async function displayProducts(category) {
     `;
     productContainer.appendChild(productElement);
     const tableHeading = document.getElementById("tableHeading");
-    tableHeading.innerHTML = `Showing ${counter} ${
+    tableHeading.innerHTML = `We've got over ${counter} ${
       category.charAt(0).toUpperCase() + category.slice(1)
     }`;
   });

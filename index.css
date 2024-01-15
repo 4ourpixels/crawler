@@ -1,12 +1,45 @@
 body {
-  font-family: Arial, sans-serif;
+  font-family: "Space Grotesk", sans-serif;
   background-color: #f4f4f4;
   margin: 0;
   padding: 20px;
 }
+.bg-ivory {
+  background-color: #ffefcd;
+}
+.bg-natural {
+  background-color: #a58e74;
+}
+.bg-apricot {
+  background-color: #e09132;
+}
+#bg-apricot {
+  background-color: #e09132;
+}
+.bg-cherish {
+  background-color: #424530;
+}
+.text-ivory {
+  color: #ffefcd;
+}
+.text-natural {
+  color: #a58e74;
+}
+#text-natural {
+  color: #a58e74;
+}
+.text-apricot {
+  color: #e09132;
+}
+.text-cherish {
+  color: #424530;
+}
+.btn-outline-cherish {
+  color: #424530;
+}
 
 .product {
-  border: 1px solid #ebd6bd;
+  border: 1px solid #ffefcd;
   border-radius: 8px;
   padding: 20px;
   margin: 10px;
@@ -28,10 +61,10 @@ body {
 
 .view-product {
   background-color: none;
-  color: #a07545;
+  color: #e09132;
   padding: 10px 25px;
   font-size: 1em;
-  border: 1px solid #a07545;
+  border: 1px solid #e09132;
   border-radius: 24px;
   cursor: pointer;
   transition: background-color 0.5s;
@@ -39,9 +72,70 @@ body {
 }
 
 .view-product:hover {
-  background-color: #a07545;
+  background-color: #e09132;
   color: #fff;
 }
 #tableHeading {
-  color: #a07545;
+  color: #a58e74;
+}
+.txt-primary {
+  color: #a58e74;
+}
+.header-img {
+  height: 70vh;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 30px;
+}
+.my-6 {
+  margin: 6rem auto;
+}
+@keyframes zoomOut {
+  from {
+    transform: scale(1.4);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.zoomOut {
+  animation: zoomOut 2s ease-in-out;
+  transform-origin: center center;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.fadeInUp {
+  opacity: 1;
+  animation: fadeInUp 1.3s ease-out;
+  transform-origin: center bottom;
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+.fadeInRight {
+  opacity: 1;
+  animation: fadeInRight 2s ease-in-out;
+  transform-origin: center bottom;
 }

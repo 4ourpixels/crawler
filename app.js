@@ -19,9 +19,9 @@ async function displayProducts(category) {
     counter += 1;
 
     const productElement = document.createElement("div");
-    productElement.classList.add("col-sm-3");
+    // productElement.classList.add("col-sm-3");
     productElement.innerHTML = `
-    <div class="product">
+    <div class="col-sm-3 col-md-4">
       <img src="${product.thumbnail}" class="thumbnail" alt="${product.name}' Image">
       <div class="card-body">
         <h4 class="product-name">${product.name}</h4>

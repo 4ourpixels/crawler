@@ -1,58 +1,67 @@
-// Load categories data from navlinks.json
-fetch("navlinks.json")
-  .then((response) => response.json())
-  .then((categoriesData) => {
-    // Function to populate the table with categories data
-    function populateTable(pageNumber, pageSize) {
-      var startIndex = (pageNumber - 1) * pageSize;
-      var endIndex = startIndex + pageSize;
+// app.js
 
-      var tableBody = document
-        .getElementById("categoriesTable")
-        .getElementsByTagName("tbody")[0];
-      tableBody.innerHTML = ""; // Clear existing rows
+async function fetchProducts(category) {
+  try {
+    const response = await fetch(`categories/${category}.json`);
+    const data = await response.json();
+    return data.data || [];
+  } catch (error) {
+    console.error(`Error fetching ${category} products:`, error);
+    return [];
+  }
+}
 
-      for (var i = startIndex; i < endIndex && i < categoriesData.length; i++) {
-        var category = categoriesData[i];
-        var row = `<tr>
-                      <th scope="row">${i + 1}</th>
-                      <td>${category.category}</td>
-                      <td><a target="_blank" href="${
-                        category.href
-                      }" class="link">View</a></td>
-                      <td>${category["data-id"]}</td>
-                      </tr>`;
-        tableBody.innerHTML += row;
-      }
-    }
+async function displayProducts(category) {
+  const products = await fetchProducts(category);
+  const productContainer = document.getElementById("product-container");
+  let counter = 0;
+  products.forEach((product) => {
+    counter += 1;
 
-    // Function to generate pagination links
-    function generatePaginationLinks(totalPages) {
-      var pagination = document.getElementById("pagination");
-      pagination.innerHTML = ""; // Clear existing pagination links
+    const productElement = document.createElement("div");
+    productElement.classList.add("col-sm-3");
+    productElement.innerHTML = `
+    <div class="product">
+      <img src="${product.thumbnail}" class="thumbnail" alt="${product.name}' Image">
+      <div class="card-body">
+        <h4 class="product-name">${product.name}</h4>
+        <a href="${product.href}" class="view-product" target="_blank">View</a>
+      </div>
+    </div>
+    `;
+    productContainer.appendChild(productElement);
+    const tableHeading = document.getElementById("tableHeading");
+    tableHeading.innerHTML = `Showing ${counter} ${
+      category.charAt(0).toUpperCase() + category.slice(1)
+    }`;
+  });
+}
 
-      for (var i = 1; i <= totalPages; i++) {
-        var li = document.createElement("li");
-        li.className = "page-item";
-        var a = document.createElement("a");
-        a.className = "page-link";
-        a.href = "#";
-        a.innerText = i;
-        a.addEventListener("click", function (event) {
-          event.preventDefault();
-          var pageNumber = parseInt(event.target.innerText);
-          populateTable(pageNumber, 10); // Adjust the page size as needed
-        });
-        li.appendChild(a);
-        pagination.appendChild(li);
-      }
-    }
+document.addEventListener("DOMContentLoaded", () => {
+  const categories = ["beds", "chairs", "sofas", "storage", "tables"];
+  const categorySelect = document.getElementById("categorySelect");
 
-    // Initial population of the table with the first page
-    populateTable(1, 10); // Adjust the page size as needed
+  // Populate the Bootstrap Select dropdown with categories
+  categories.forEach((category) => {
+    const option = document.createElement("option");
+    option.value = category;
+    option.text = category.charAt(0).toUpperCase() + category.slice(1);
+    categorySelect.appendChild(option);
+  });
 
-    // Assuming categoriesData is the array of objects obtained from navlinks.json
-    var totalPages = Math.ceil(categoriesData.length / 10); // Adjust the page size as needed
-    generatePaginationLinks(totalPages);
-  })
-  .catch((error) => console.error("Error loading navlinks.json:", error));
+  // Display products for the selected category on dropdown change
+  categorySelect.addEventListener("change", () => {
+    const selectedCategory = categorySelect.value;
+    document.getElementById("product-container").innerHTML = ""; // Clear existing products
+    displayProducts(selectedCategory);
+  });
+
+  // Display products for the default category on page load
+  const defaultCategory = categories[0];
+  displayProducts(defaultCategory);
+
+  // Initialize the Bootstrap Select plugin
+  $(document).ready(function () {
+    $("#categorySelect").selectpicker();
+  });
+});

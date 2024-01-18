@@ -139,3 +139,6 @@ body {
   animation: fadeInRight 2s ease-in-out;
   transform-origin: center bottom;
 }
+.hide {
+  display: none;
+}

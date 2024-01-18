@@ -1,67 +1,77 @@
-// app.js
-
-async function fetchProducts(category) {
+// Function to fetch all products from the server asynchronously
+async function fetchAllProducts() {
   try {
-    const response = await fetch(`categories/${category}.json`);
+    // Make a request to the "data.json" file and parse the JSON response
+    const response = await fetch("data.json");
     const data = await response.json();
-    return data.data || [];
+    return data || []; // Return the parsed data or an empty array if no data is available
   } catch (error) {
-    console.error(`Error fetching ${category} products:`, error);
-    return [];
+    console.error("Error fetching products:", error); // Log an error if fetching fails
+    return []; // Return an empty array in case of an error
   }
 }
 
-async function displayProducts(category) {
-  const products = await fetchProducts(category);
-  const productContainer = document.getElementById("product-container");
-  let counter = 0;
-  products.forEach((product) => {
-    counter += 1;
-
-    const productElement = document.createElement("div");
-    productElement.classList.add("col-sm-3", "col-md-4");
-    productElement.innerHTML = `
-    <div class="product">
-      <img src="${product.thumbnail}" class="thumbnail" alt="${product.name}' Image">
-      <div class="card-body">
-        <h4 class="product-name">${product.name}</h4>
-        <a href="${product.href}" class="view-product" target="_blank">View</a>
-      </div>
-    </div>
-    `;
-    productContainer.appendChild(productElement);
-    const tableHeading = document.getElementById("tableHeading");
-    tableHeading.innerHTML = `We've got over ${counter} ${
-      category.charAt(0).toUpperCase() + category.slice(1)
-    }`;
-  });
+// Function to navigate to the product details page based on the provided product ID
+function viewProduct(id) {
+  window.location.href = `product.html?id=${id}`;
 }
 
+// Function to display products in the HTML based on an optional filter
+async function displayAllProducts(filter = "") {
+  // Fetch all products from the server
+  const products = await fetchAllProducts();
+  const productContainer = document.getElementById("product-container");
+  let counter = 0;
+
+  // Clear existing products in the container
+  productContainer.innerHTML = "";
+
+  // Iterate through each product and display it if it matches the search filter
+  products.forEach((product) => {
+    if (
+      product.name.toLowerCase().includes(filter.toLowerCase()) ||
+      product.category.toLowerCase().includes(filter.toLowerCase())
+    ) {
+      counter += 1;
+
+      // Create HTML elements for each product and append them to the container
+      const productElement = document.createElement("div");
+      productElement.classList.add("col-sm-3", "col-md-4");
+      productElement.innerHTML = `
+        <div class="product">
+          <img src="${product.thumbnail}" class="thumbnail" alt="${product.name}' Image">
+          <div class="card-body">
+            <h4 class="product-name">${product.name}</h4>
+            <a onclick="viewProduct(${product.id})" class="view-product">View</a>
+          </div>
+        </div>
+      `;
+      productContainer.appendChild(productElement);
+    }
+  });
+
+  // Update the heading to display the number of products
+  const tableHeading = document.getElementById("tableHeading");
+  tableHeading.innerHTML = `We've got over ${counter} products`;
+}
+
+// Event listener for the "DOMContentLoaded" event, executed when the page is fully loaded
 document.addEventListener("DOMContentLoaded", () => {
-  const categories = ["beds", "chairs", "sofas", "storage", "tables"];
-  const categorySelect = document.getElementById("categorySelect");
+  const header = document.getElementById("header");
 
-  // Populate the Bootstrap Select dropdown with categories
-  categories.forEach((category) => {
-    const option = document.createElement("option");
-    option.value = category;
-    option.text = category.charAt(0).toUpperCase() + category.slice(1);
-    categorySelect.appendChild(option);
-  });
+  // Display all products on page load
+  displayAllProducts();
 
-  // Display products for the selected category on dropdown change
-  categorySelect.addEventListener("change", () => {
-    const selectedCategory = categorySelect.value;
-    document.getElementById("product-container").innerHTML = ""; // Clear existing products
-    displayProducts(selectedCategory);
-  });
+  // Add event listener for the search bar input
+  const searchInput = document.getElementById("search");
+  searchInput.addEventListener("input", () => {
+    const searchTerm = searchInput.value;
+    const isSearchEmpty = searchTerm.trim() === "";
 
-  // Display products for the default category on page load
-  const defaultCategory = categories[0];
-  displayProducts(defaultCategory);
+    // Toggle the "hide" class based on whether the search term is empty
+    header.classList.toggle("hide", !isSearchEmpty);
 
-  // Initialize the Bootstrap Select plugin
-  $(document).ready(function () {
-    $("#categorySelect").selectpicker();
+    // Display all products or filtered products based on the search term
+    displayAllProducts(searchTerm);
   });
 });

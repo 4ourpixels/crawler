@@ -1,8 +1,8 @@
 // Function to fetch product details from the server based on the product ID
 async function fetchProductDetails(productId) {
   try {
-    // Fetch product details from a specific category JSON file (Example: "category/storage.json")
-    const response = await fetch(`category/storage.json`);
+    // Fetch product details from a specific category JSON file (Example: "data.json")
+    const response = await fetch(`data.json`);
     const data = await response.json();
     return data || {}; // Return the parsed data or an empty object if no data is available
   } catch (error) {
